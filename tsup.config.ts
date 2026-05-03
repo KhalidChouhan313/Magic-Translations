@@ -1,7 +1,6 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig([
-  // CLI + core — CommonJS
   {
     entry: {
       cli: "src/cli.ts",
@@ -13,10 +12,9 @@ export default defineConfig([
     format: ["cjs"],
     dts: true,
     sourcemap: true,
-    clean: false,
+    clean: true,
     outDir: "dist",
   },
-  // React — ESM + CJS dono
   {
     entry: {
       "react/index": "src/react/index.ts",
@@ -28,6 +26,6 @@ export default defineConfig([
     esbuildOptions(options) {
       options.jsx = "automatic";
     },
-    external: ["react", "react-dom"],
+    external: ["react", "react-dom", "react/jsx-runtime"],
   },
 ]);
