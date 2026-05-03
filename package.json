@@ -1,5 +1,5 @@
 {
-  "name": "magic-translate-cli",
+  "name": "magic-translate",
   "version": "2.0.0",
   "description": "Auto translation package for Node.js apps",
   "main": "dist/index.js",
