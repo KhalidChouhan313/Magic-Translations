@@ -1,0 +1,58 @@
+{
+  "name": "magic-translate",
+  "version": "2.0.0",
+  "description": "Auto translation package for Node.js apps",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.mjs",
+      "require": "./dist/react/index.js"
+    }
+  },
+  "bin": {
+    "magic-translate": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "ts-node src/cli.ts",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "translation",
+    "i18n",
+    "auto-translate",
+    "nodejs"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@babel/parser": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "axios": "^1.6.0",
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "fs-extra": "^11.1.0",
+    "inquirer": "^12.11.1"
+  },
+  "devDependencies": {
+    "@types/babel__traverse": "^7.20.0",
+    "@types/fs-extra": "^11.0.0",
+    "@types/inquirer": "^9.0.9",
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "ts-node": "^10.9.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

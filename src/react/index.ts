@@ -1,0 +1,1 @@
+export { MagicTranslate, useMagicTranslate } from "./MagicTranslate";
