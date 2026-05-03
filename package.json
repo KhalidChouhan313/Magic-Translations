@@ -1,6 +1,6 @@
 {
   "name": "magic-translate",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Auto translation package for Node.js apps",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
