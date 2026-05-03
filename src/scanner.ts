@@ -4,8 +4,24 @@ import * as parser from "@babel/parser";
 import traverse from "@babel/traverse";
 
 const EXTENSIONS = [".js", ".jsx", ".ts", ".tsx"];
+const SKIP_FOLDERS = ["node_modules", "dist", ".git", "translations", "public"];
 
-const SKIP_FOLDERS = ["node_modules", "dist", ".git", "translations"];
+function shouldSkip(text: string): boolean {
+    if (text.length <= 2) return true;
+    if (/^[a-z0-9]+(-[a-z0-9]+)+$/.test(text)) return true;
+    if (text.includes("/") || text.includes("\\")) return true;
+    if (/^[a-z][a-z0-9]*$/.test(text)) return true;
+    if (/^[a-z][a-zA-Z0-9]+$/.test(text)) return true;
+    if (/^[A-Z_0-9]+$/.test(text)) return true;
+    if (/^\d+$/.test(text)) return true;
+    if (text.startsWith("http") || text.startsWith("www")) return true;
+    if (text.startsWith("_") || text.startsWith(".")) return true;
+    if (text === "true" || text === "false") return true;
+    if (text.startsWith("mt_")) return true;
+    if (/#[0-9a-fA-F]{3,6}/.test(text)) return true;
+    if (/^[A-Z][a-z]+[A-Z]/.test(text)) return true;
+    return false;
+}
 
 export async function scanProject(cwd: string): Promise<string[]> {
     const allTexts: string[] = [];
@@ -16,8 +32,7 @@ export async function scanProject(cwd: string): Promise<string[]> {
         allTexts.push(...texts);
     }
 
-    const unique = [...new Set(allTexts)];
-    return unique;
+    return [...new Set(allTexts)];
 }
 
 async function getAllFiles(dir: string): Promise<string[]> {
@@ -55,26 +70,26 @@ async function scanFile(filePath: string): Promise<string[]> {
         traverse(ast, {
             JSXText(nodePath) {
                 const text = nodePath.node.value.trim();
-                if (text.length > 1) {
+                if (!shouldSkip(text)) {
                     texts.push(text);
                 }
             },
 
             StringLiteral(nodePath) {
                 const text = nodePath.node.value.trim();
-
-                if (text.length < 2) return;
+                if (shouldSkip(text)) return;
 
                 const parent = nodePath.parent;
                 if (parent.type === "CallExpression") return;
-
-                if (text.includes("/") || text.includes("\\")) return;
+                if (parent.type === "ImportDeclaration") return;
+                if (parent.type === "ExportNamedDeclaration") return;
+                if (parent.type === "ExportDefaultDeclaration") return;
+                if (parent.type === "ObjectProperty") return;
 
                 texts.push(text);
             },
         });
-    } catch (err) {
-    }
+    } catch (err) { }
 
     return texts;
 }
