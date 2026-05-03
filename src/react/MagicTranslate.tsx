@@ -78,7 +78,6 @@ export function MagicTranslate({ children, config }: MagicTranslateProps) {
   useEffect(() => {
     if (!isLoaded) return;
     
-    // Always restore to original language before applying new language
     restoreOriginal();
 
     if (language === config.defaultLanguage) {
