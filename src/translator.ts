@@ -5,19 +5,17 @@ import chalk from "chalk";
 import { getConfig } from "./init";
 
 const LINGVA_SERVERS = [
+  "https://lingva.ml/api/v1",
   "https://lingva.tiekoetter.com/api/v1",
   "https://translate.plausibility.cloud/api/v1",
-  "https://lingva.ml/api/v1",
-  "https://lingva.lunar.icu/api/v1",
-  "https://lingva.hexogen.eu/api/v1",
 ];
 
 const api = axios.create({
-  timeout: 5000,
+  timeout: 10000,
 });
 
-const MAX_CONCURRENT = 15;
-const RETRIES = 1;
+const MAX_CONCURRENT = 3;
+const RETRIES = 2;
 const LANG_MAP: Record<string, string> = {
   english: "en",
   urdu: "ur",
@@ -177,10 +175,13 @@ async function retryTranslate(
   for (let i = 0; i <= RETRIES; i++) {
     try {
       const result = await translateWithFallback(text, from, to);
+      if (result.trim() === text.trim()) {
+        throw new Error("Same translation");
+      }
       return result;
     } catch (err) {
       lastError = err;
-      if (i < RETRIES) await sleep(150);
+      await sleep(500);
     }
   }
 
