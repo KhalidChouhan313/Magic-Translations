@@ -44,20 +44,12 @@ function shouldSkip(text: string): boolean {
     // Hex colors
     if (/#[0-9a-fA-F]{3,8}/.test(t)) return true;
 
-    // ALL_CAPS constants
-    if (/^[A-Z_][A-Z0-9_]+$/.test(t)) return true;
+    // ALL_CAPS constants (only if it has underscores, e.g., API_KEY)
+    if (/^[A-Z][A-Z0-9]*_[A-Z0-9_]+$/.test(t)) return true;
 
-    // camelCase identifiers (no spaces, starts with lowercase)
-    if (/^[a-z][a-zA-Z0-9]+$/.test(t)) return true;
+    // lowercase-with-hyphens (likely CSS classes or internal keys)
+    if (/^[a-z0-9]+(-[a-z0-9]+){2,}$/.test(t)) return true;
 
-    // lowercase-with-hyphens (kebab-case: CSS classes, event names, keys)
-    if (/^[a-z0-9]+(-[a-z0-9]+)+$/.test(t)) return true;
-
-    // Simple all-lowercase word (likely a keyword/identifier)
-    if (/^[a-z]+$/.test(t)) return true;
-
-    // PascalCase (component names, type names)
-    if (/^[A-Z][a-z]+([A-Z][a-z]*)+$/.test(t)) return true;
 
     // Looks like a CSS class string: multiple space-separated tokens where
     // most tokens are lowercase/hyphenated (Tailwind, Bootstrap, etc.)
